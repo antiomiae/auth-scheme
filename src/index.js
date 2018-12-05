@@ -1,8 +1,9 @@
-import {generateKeyPair} from 'secure-token.js'
-import login from 'login.js'
+import sodium from 'libsodium-wrappers'
 
-const myKeyPair = generateKeyPair()
+(async (console) => {
+    await sodium.ready
 
-login({email_address: 'k@t.com', password: 'password'}, myKeyPair)
-
-
+    console.time('gen keypair')
+    const keypair = sodium.crypto_sign_keypair()
+    console.timeEnd('gen keypair')
+})(console)
