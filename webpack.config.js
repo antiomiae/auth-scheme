@@ -5,7 +5,12 @@ const path = require('path')
 module.exports = {
   devtool: 'cheap-module-source-map',
   module: {
-    rules: []
+    rules: [
+      {
+        test: /.*\.txt$/,
+        use: 'raw-loader'
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({

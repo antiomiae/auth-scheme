@@ -1,22 +1,14 @@
-import * as tn from 'tweetnacl-ts'
+import randomText from 'random_text.txt'
+import * as requests from './requests'
+import nacl from 'tweetnacl/nacl-fast'
 
-(async (console) => {
-    console.time('gen keypair')
-    const keypair = tn.sign_keyPair()
-    console.timeEnd('gen keypair')
+const key = nacl.sign.keyPair()
 
-    console.log(keypair)
+console.time('signature')
+let signature = requests.signRequest({method: 'POST', url: 'http://www.site.com/path/to/resource?q=1&z=2', headers: {}}, key.secretKey)
+console.timeEnd('signature')
 
-    console.time('signature')
-    const signature = tn.sign(tn.decodeUTF8('this is the message to sign'), keypair.secretKey)
-    console.timeEnd('signature')
+console.log(signature)
+console.log(requests.encodeHex(signature))
 
-    console.log(tn.encodeHex(signature))
-
-    console.time('signature')
-    const verified = tn.sign_open(signature, keypair.publicKey)
-    console.timeEnd('signature')
-
-    console.log(tn.encodeUTF8(verified))
-
-})(console)
+console.log(requests.decodeUTF8Array(signature))
