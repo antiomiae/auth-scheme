@@ -1,14 +1,12 @@
 import nacl from 'tweetnacl/nacl-fast'
-
-const textEncoder = new TextEncoder()
-const utf8Decoder = new TextDecoder('utf-8')
+import * as b64 from 'base64-js'
 
 export function decodeUTF8Array(a) {
-    return utf8Decoder.decode(a)
+    return (new TextDecoder('utf-8')).decode(a)
 }
 
 export function encodeString(s) {
-    return textEncoder.encode(s)
+    return (new TextEncoder()).encode(s)
 }
 
 export function encodeHex(a) {
@@ -31,8 +29,9 @@ export function encodeHex(a) {
 // Returns signature for request
 export const signRequest = (request = {method, url, body, headers}, secretKey) => {
     const message = getCanonicalRequestString(request)
+    console.log(message)
     const signature = nacl.sign.detached(encodeString(message), secretKey)
-    return signature
+    return b64.fromByteArray(signature)
 }
 
 export const getCanonicalRequestString = (request) => {
@@ -45,11 +44,11 @@ export const getCanonicalRequestString = (request) => {
         contentArray = request.body || new Uint8Array(0)
     }
 
-    contentHash = encodeHex(contentArray)
+    contentHash = encodeHex(nacl.hash(contentArray))
 
     const str = request.method + '\n' +
                 url.origin + '\n' + // might need to use host instead
-                url.path + '\n' +
+                url.pathname + '\n' +
                 url.search + '\n' +
                 contentHash + '\n'
 
