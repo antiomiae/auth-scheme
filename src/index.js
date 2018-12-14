@@ -1,7 +1,10 @@
-import randomText from 'random_text.txt'
 import * as requests from './requests'
 import nacl from 'tweetnacl/nacl-fast'
 import {fromByteArray as b64encode} from 'base64-js'
+import axios from 'axios'
+import buildURL from 'axios/lib/helpers/buildURL'
+
+console.log(axios)
 
 const key = nacl.sign.keyPair()
 

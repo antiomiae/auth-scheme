@@ -42,7 +42,7 @@ def canonical_request(r)
   RbNaCl::Hash::sha512(content).unpack('H*')[0] + "\n"
 end
 
-
+SYSTEM_PRIVATE_KEY = RbNaCl::Sign
 
 class App < Roda
   plugin :json_parser
